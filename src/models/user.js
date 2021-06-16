@@ -1,5 +1,6 @@
-import { Schema } from "mongoose";
 import mongoose from "mongoose";
+
+const { Schema } = mongoose;
 const userSchema = new Schema({
   username: {
     type: String,
@@ -10,6 +11,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
     minlength: [8, "passwprd must be 8 or more characters"],
+  },
+  createdAt: { type: Date, default: Date.now },
+  isDeleted: {
+    type: Boolean,
+    default: false,
   },
 });
 

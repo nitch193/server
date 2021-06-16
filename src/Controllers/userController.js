@@ -18,7 +18,9 @@ userController.post = (req, res) => {
       });
     })
     .catch((err) => {
-      res.status(500);
+      res.status(500).json({
+        message: err,
+      });
     });
 };
 
