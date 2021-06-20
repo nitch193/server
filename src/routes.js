@@ -9,7 +9,9 @@ const routes = express();
 
 routes.get("/", basicController.get);
 
-routes.post("/signup", userController.post);
+routes.post("/signup", userController.signup);
+
+routes.post("/login", userController.login);
 
 routes.post("/post", postController.post);
 
