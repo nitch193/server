@@ -3,7 +3,7 @@ import db from "../models";
 const postController = {};
 
 postController.post = (req, res) => {
-  const { title, text, link, userId } = req.body;
+  const { title, text, topic, link, userId } = req.body;
 
   // validation =>  either text or link not both
 
@@ -11,6 +11,7 @@ postController.post = (req, res) => {
     title: title,
     text: text,
     link: link,
+    topic: topic,
     _creator: userId,
   });
   post
@@ -30,12 +31,6 @@ postController.post = (req, res) => {
 
 postController.getAll = (req, res) => {
   db.Post.find({})
-    .populate({ path: "_creator", select: "username createdAt -_id" }) //select: "username createdAt -_id"
-    .populate({
-      path: "_comments",
-      select: "text createdAt _creator",
-      match: { isDeleted: false },
-    }) // select: "text createdAt"
     .then((posts) => {
       return res.status(200).json({
         success: true,
@@ -48,4 +43,89 @@ postController.getAll = (req, res) => {
       });
     });
 };
+
+postController.getByTopic = (req, res) => {
+  const topic = req.query.topic;
+  db.Post.find({ topic: topic })
+    .then((postsByTopic) => {
+      return res.status(200).json({
+        success: true,
+        data: postsByTopic,
+      });
+    })
+    .catch((err) => {
+      return res.status(400).json({
+        message: err,
+      });
+    });
+};
+postController.getByUser = (req, res) => {
+  const creator = req.query.creator;
+  db.Post.find({ _creator: creator })
+    .then((postsByUser) => {
+      return res.status(200).json({
+        success: true,
+        data: postsByUser,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err,
+      });
+    });
+};
+
+postController.upvote = (req, res) => {
+  const postid = req.query.postid;
+  db.Post.findById(postid)
+    .then((post) => {
+      post.vote(req.query.userid, 1).then((upvoted) => {
+        return res.status(200).json({
+          status: true,
+          data: upvoted,
+        });
+      });
+    })
+    .catch((err) => {
+      return res.status(400).json({
+        message: err,
+      });
+    });
+};
+postController.downvote = (req, res) => {
+  const postid = req.query.postid;
+  db.Post.findById(postid)
+    .then((post) => {
+      post.vote(req.query.userid, -1).then((downvoted) => {
+        return res.status(200).json({
+          status: true,
+          data: downvoted,
+        });
+      });
+    })
+    .catch((err) => {
+      return res.status(400).json({
+        message: err,
+      });
+    });
+};
+
+postController.unvote = (req, res) => {
+  const postid = req.query.postid;
+  db.Post.findById(postid)
+    .then((post) => {
+      post.vote(req.query.userid, 0).then((upvoted) => {
+        return res.status(200).json({
+          status: true,
+          data: upvoted,
+        });
+      });
+    })
+    .catch((err) => {
+      return res.status(400).json({
+        message: err,
+      });
+    });
+};
+
 export default postController;

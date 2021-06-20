@@ -17,4 +17,12 @@ routes.get("/posts", postController.getAll);
 
 routes.post("/comment", commentController.post);
 
+routes.get("/postbytopic", postController.getByTopic);
+
+routes.get("/postbyuser", postController.getByUser);
+
+routes.get("/postupvote", postController.upvote);
+routes.get("/postdownvote", postController.downvote);
+routes.get("/postunvote", postController.unvote);
+
 export default routes;
