@@ -11,7 +11,7 @@ postController.post = (req, res) => {
     title: title,
     text: text,
     link: link,
-    topic: topic,
+    topic: topic.toLowerCase(),
     _creator: userId,
   });
   post
