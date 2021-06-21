@@ -3,18 +3,18 @@ import db from "../models";
 const commentController = {};
 
 commentController.post = (req, res) => {
-  const { text, userId, postId } = req.body;
+  const { text } = req.body;
 
   const comment = new db.Comment({
     text: text,
-    _creator: userId,
-    _post: postId,
+    _creator: req.user._id,
+    _post: req.query.postid,
   });
 
   comment
     .save()
     .then((newComment) => {
-      db.Post.findByIdAndUpdate(postId, {
+      db.Post.findByIdAndUpdate(req.query.postid, {
         $push: { _comments: newComment._id },
       })
         .then((existingPost) => {

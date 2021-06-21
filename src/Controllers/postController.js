@@ -3,16 +3,15 @@ import db from "../models";
 const postController = {};
 
 postController.post = (req, res) => {
-  const { title, text, topic, link, userId } = req.body;
+  const { title, text, topic, link } = req.body;
 
   // validation =>  either text or link not both
-
   const post = new db.Post({
     title: title,
     text: text,
     link: link,
     topic: topic.toLowerCase(),
-    _creator: userId,
+    _creator: req.user._id,
   });
   post
     .save()
@@ -60,7 +59,7 @@ postController.getByTopic = (req, res) => {
     });
 };
 postController.getByUser = (req, res) => {
-  const creator = req.query.creator;
+  const creator = req.user._id;
   db.Post.find({ _creator: creator })
     .then((postsByUser) => {
       return res.status(200).json({
@@ -79,7 +78,7 @@ postController.upvote = (req, res) => {
   const postid = req.query.postid;
   db.Post.findById(postid)
     .then((post) => {
-      post.vote(req.query.userid, 1).then((upvoted) => {
+      post.vote(req.user._id, 1).then((upvoted) => {
         return res.status(200).json({
           status: true,
           data: upvoted,
@@ -96,7 +95,7 @@ postController.downvote = (req, res) => {
   const postid = req.query.postid;
   db.Post.findById(postid)
     .then((post) => {
-      post.vote(req.query.userid, -1).then((downvoted) => {
+      post.vote(req.user._id, -1).then((downvoted) => {
         return res.status(200).json({
           status: true,
           data: downvoted,
@@ -114,7 +113,7 @@ postController.unvote = (req, res) => {
   const postid = req.query.postid;
   db.Post.findById(postid)
     .then((post) => {
-      post.vote(req.query.userid, 0).then((upvoted) => {
+      post.vote(req.user._id, 0).then((upvoted) => {
         return res.status(200).json({
           status: true,
           data: upvoted,
