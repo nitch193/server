@@ -30,4 +30,8 @@ routes.get("/postdownvote", jwt, postController.downvote);
 
 routes.get("/postunvote", jwt, postController.unvote);
 
+routes.delete("/deletepost", jwt, postController.destroy);
+
+routes.delete("/deletecomment", jwt, commentController.destroy);
+
 export default routes;

@@ -37,4 +37,27 @@ commentController.post = (req, res) => {
     });
 };
 
+commentController.destroy = async (req, res) => {
+  const user = req.user._id;
+  const creator = req.query.creator;
+  if (user === creator) {
+    db.Comment.findByIdAndDelete(req.query.commentid)
+      .then((result) => {
+        return res.status(200).json({
+          success: true,
+          message: result,
+        });
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          message: err,
+        });
+      });
+  } else {
+    return res.status(401).json({
+      message: "Not auothorized",
+    });
+  }
+};
+
 export default commentController;

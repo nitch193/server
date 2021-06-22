@@ -52,10 +52,10 @@ postSchema.methods.vote = function (user, vote) {
 };
 
 const autoPopulate = function (next) {
-  this.populate({ path: "_creator", select: "username createdAt -_id" }) //select: "username createdAt -_id"
+  this.populate({ path: "_creator", select: "username createdAt _id" }) //select: "username createdAt -_id"
     .populate({
       path: "_comments",
-      select: "text createdAt _creator",
+      select: "text createdAt _creator _id",
       match: { isDeleted: false },
     });
   next();

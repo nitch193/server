@@ -2,7 +2,8 @@ const basicController = {};
 
 basicController.get = (req, res) => {
   res.json({
-    message: "Welocom",
+    success: true,
+    message: "Welcome",
   });
 };
 
