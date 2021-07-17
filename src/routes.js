@@ -1,12 +1,14 @@
-import express from "express";
+import Router from "express";
 // Controller imports
 import basicController from "./Controllers/basicController";
 import userController from "./Controllers/userController";
 import postController from "./Controllers/postController";
 import commentController from "./Controllers/commentController";
 import jwt from "./middlewares/authmiddleware";
+import helmet from "helmet";
 
-const routes = express();
+const routes = Router();
+routes.use(helmet());
 
 routes.get("/", basicController.get);
 
